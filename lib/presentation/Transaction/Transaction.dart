@@ -85,11 +85,7 @@ class _TransactionState extends State<Transaction> {
                           ),
                         ),
                         ...transactions.map((item) {
-                          Widget? iconWidget;
-                          IconData? iconData;
-                          Color iconColor;
                           String category = item[DatabaseHelper.TRANSACTION_CATEGORY];
-                          String type = item[DatabaseHelper.TRANSACTION_TYPE];
 
                           Widget leadingIcon;
 

@@ -1,9 +1,12 @@
 // lib/presentation/OnBoardHelper.dart
+import 'package:expense_tracker/domain/repositoriesinterface/databasefetch.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../domain/repositoriesinterface/fetchprefrence.dart';
 
 class OnboardProvider extends ChangeNotifier {
-  final Fetchprefrencedata repo;
+  final Fetchprefrencedata _repopref;
+  final DatabaseFetch _repodb;
 
   String _name = "";
   String _selectedCurrency = "Select Currency";
@@ -13,7 +16,7 @@ class OnboardProvider extends ChangeNotifier {
   bool _currencyError = false;
   bool _balanceError = false;
 
-  OnboardProvider(this.repo);
+  OnboardProvider(this._repopref , this._repodb);
 
   String get selectedCurrency => _selectedCurrency;
   bool get nameError => _nameError;
@@ -70,10 +73,11 @@ class OnboardProvider extends ChangeNotifier {
       return false;
     }
 
-    await repo.setFirstUser();
-    await repo.setName(_name);
-    await repo.setCurrency(_selectedCurrency);
-    await repo.setBalance(parsedBalance);
+    await _repopref.setFirstUser();
+    await _repopref.setName(_name);
+    await _repopref.setCurrency(_selectedCurrency);
+    await _repopref.setBalance(parsedBalance);
+    await _repodb.addTransaction(parsedBalance, "income", "Others", DateFormat('dd-MM-yy').format(DateTime.now()), "Initial Payment");
 
     return true;
   }

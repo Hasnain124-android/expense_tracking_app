@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/repositories/FetchPrefImp.dart';
+import '../../data/repositories/fetch_Database.dart';
 import '../InitPage/InitPage.dart';
 import '../InitPage/OnBoardHelper.dart';
 import '../dashboard/dashboardHelper.dart';
@@ -44,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         MaterialPageRoute(
           builder: (_) => ChangeNotifierProvider(
-            create: (_) => OnboardProvider(Fetchprefimp()),
+            create: (_) => OnboardProvider(Fetchprefimp() , FetchDatabaseImp()),
             child: Initpage(),
           ),
         ),
@@ -52,15 +53,36 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       DateTime now = DateTime.now();
       String month = DateFormat('MM-yyyy').format(now);
+
+      print("========== BEFORE ==========");
+      print("Phone Month      : $month");
+      print("Current Month    : ${Prefrence.getCurrentMonth()}");
+      print("Report Months    : ${Prefrence.getReportMonths()}");
+      print("Income           : ${Prefrence.getIncome()}");
+      print("Expense          : ${Prefrence.getExpense()}");
+      print("Balance          : ${Prefrence.getBalance()}");
+
       if(Prefrence.getCurrentMonth() != month){
         List<String> reportList = Prefrence.getReportMonths();
         reportList.add(Prefrence.getCurrentMonth());
-        Prefrence.setReportMonths(reportList);
+        await Prefrence.setIncome(0.0);
+        await Prefrence.setExpense(0.0);
+        await Prefrence.setBalance(0.0);
+        await Prefrence.setReportMonths(reportList);
         await Prefrence.setCurrentMonth(month);
-
+        print("Inside IF:");
+        print("Current Month    : ${Prefrence.getCurrentMonth()}");
+        print("Report Months    : ${Prefrence.getReportMonths()}");
+        print("Income           : ${Prefrence.getIncome()}");
+        print("Expense          : ${Prefrence.getExpense()}");
+        print("Balance          : ${Prefrence.getBalance()}");
+      }else {
+        print(">>>> MONTH DID NOT CHANGE <<<<");
       }
+
+      print(Prefrence.getReportMonths());
       await provider.getPrefData();
-      await provider.getDB_Data();
+      await provider.getDB_Data(Prefrence.getCurrentMonth());
       provider.setLoading();
       Prefrence.setShouldLoad(false);
       Navigator.pushReplacement(

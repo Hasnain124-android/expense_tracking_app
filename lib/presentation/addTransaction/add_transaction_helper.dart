@@ -1,3 +1,4 @@
+import 'package:expense_tracker/data/local/prefrenceData/Prefrence.dart';
 import 'package:flutter/material.dart';
 import '../../domain/repositoriesinterface/databasefetch.dart';
 import '../../domain/repositoriesinterface/fetchprefrence.dart';
@@ -73,7 +74,6 @@ class AddTransactionHelper extends ChangeNotifier{
   }
 
   Future<bool> validate()  async{
-    bool success = false;
 
     // NAME CHECK
     if (_amount.isEmpty) {
@@ -87,6 +87,16 @@ class AddTransactionHelper extends ChangeNotifier{
       _categoryError = true;
       notifyListeners();
       return false;
+    }
+
+    //CHECK FOR CURRENT MONTH VALIDATION
+    DateTime now = DateTime.now();
+    String month = DateFormat('MM-yyyy').format(now);
+    if(Prefrence.getCurrentMonth() != month){
+      List<String> reportList = Prefrence.getReportMonths();
+      reportList.add(Prefrence.getCurrentMonth());
+      await Prefrence.setReportMonths(reportList);
+      await Prefrence.setCurrentMonth(month);
     }
 
     // SAFE PARSE (prevents crash)

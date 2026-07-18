@@ -28,8 +28,8 @@ class DashboardHelper extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getDB_Data() async {
-    _data = await _repoDB.dashBoardFetch();
+  Future<void> getDB_Data(String month) async {
+    _data = await _repoDB.dashBoardFetch(month);
     _categoryMap = {
       for (var e in _data)
         e["transaction_category"]: (e["total"] as num).toDouble()
@@ -55,5 +55,5 @@ class DashboardHelper extends ChangeNotifier {
   double get income => _income;
   double get expense => _expense;
   bool get loading => _isLoading;
-  List<Map<String, dynamic>> get data => _data;
+  //List<Map<String, dynamic>> get data => _data;
 }

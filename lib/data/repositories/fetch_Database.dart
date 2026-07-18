@@ -23,12 +23,23 @@ class FetchDatabaseImp implements DatabaseFetch {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> dashBoardFetch() async {
-    return await myDB.getDashBoardTransactionData();
+  Future<List<Map<String, dynamic>>> dashBoardFetch(String month) async {
+    return await myDB.getDashBoardTransactionData(month);
   }
 
   @override
   Future<List<Map<String, dynamic>>> getTransaction(int value) async{
     return await myDB.getTransaction(value);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getAmount(String month) {
+    return myDB.getAmountData(month);
+  }
+
+
+  @override
+  Future<List<Map<String, dynamic>>> getMonthlyTransactions(String month) {
+    return myDB.getMonthlyTransactions(month);
   }
 }

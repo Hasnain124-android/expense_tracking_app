@@ -42,7 +42,7 @@ class _DashboardState extends State<Dashboard> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
       await provider.getPrefData();
-      await provider.getDB_Data();
+      await provider.getDB_Data(Prefrence.getCurrentMonth());
       provider.setLoading();
       setState(() {});
     });

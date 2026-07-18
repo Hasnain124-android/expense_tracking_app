@@ -78,8 +78,8 @@ class DatabaseHelper {
     }
   }
 
-  // ✅ Dashboard grouped data
-  Future<List<Map<String, dynamic>>> getDashBoardTransactionData() async {
+  // ✅ get group data for the graph
+  Future<List<Map<String, dynamic>>> getDashBoardTransactionData(String month) async {
     final db = await database;
 
     return await db.rawQuery('''
@@ -88,9 +88,22 @@ class DatabaseHelper {
         SUM($TRANSACTION_AMOUNT) AS total
       FROM $TABLE_NAME
       WHERE $TRANSACTION_TYPE = 'expense'
-      AND $MONTH = '${Prefrence.getCurrentMonth()}'
+      AND $MONTH = '${month}'
       GROUP BY $TRANSACTION_CATEGORY
     ''');
+  }
+
+  Future<List<Map<String , dynamic>>> getAmountData(String month) async{
+    final db = await database;
+    return await db.rawQuery(
+      '''
+  SELECT $TRANSACTION_TYPE, SUM($TRANSACTION_AMOUNT) AS total
+  FROM $TABLE_NAME
+  WHERE $MONTH = ?
+  GROUP BY $TRANSACTION_TYPE
+  ''',
+      [month],
+    );
   }
 
   Future<List<Map<String, dynamic>>> getTransaction(int value) async {
@@ -117,6 +130,16 @@ class DatabaseHelper {
     // ALL
     return await db.query(
       TABLE_NAME,
+      orderBy: "$SERIAL_NUMBER DESC",
+    );
+  }
+
+  Future<List<Map<String , dynamic>>> getMonthlyTransactions(String month) async{
+    final db = await database;
+    return await db.query(
+      TABLE_NAME,
+      where: "$MONTH = ?",
+      whereArgs: [month],
       orderBy: "$SERIAL_NUMBER DESC",
     );
   }

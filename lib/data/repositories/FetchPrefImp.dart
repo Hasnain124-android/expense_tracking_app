@@ -70,4 +70,9 @@ class Fetchprefimp implements Fetchprefrencedata {
   List<String> getReportMonths() {
     return Prefrence.getReportMonths();
   }
+
+  @override
+  String getCurrentMonth() {
+    return Prefrence.getCurrentMonth();
+  }
 }

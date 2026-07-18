@@ -12,4 +12,5 @@ abstract class Fetchprefrencedata {
   double getIncome();
   double getExpense();
   List<String> getReportMonths();
+  String getCurrentMonth();
 }
